@@ -2,18 +2,22 @@
 <html lang="en" ng-app="NarrowItDownApp">
 <head>
   <meta charset="UTF-8">
-  <title>Menu Search</title>
+  <title>Narrow Down Menu App</title>
+  <style>
+    .error { color: red; font-weight: bold; }
+    li { margin-bottom: 5px; }
+    button { margin-left: 10px; }
+  </style>
 </head>
-<body>
+<body ng-controller="NarrowItDownController as ctrl">
 
-  <div ng-controller="NarrowItDownController as ctrl">
-    <input type="text" ng-model="ctrl.searchTerm" placeholder="Search term">
-    <button ng-click="ctrl.narrow()">Narrow It Down For Me!</button>
-    <p>{{ ctrl.message }}</p>
-    <found-items items="ctrl.found" on-remove="ctrl.removeItem(index)"></found-items>
-  </div>
+  <input type="text" ng-model="ctrl.searchTerm" placeholder="Search term">
+  <button ng-click="ctrl.narrow()">Narrow It Down For Me!</button>
 
-  <!-- AngularJS and app scripts -->
+  <p class="error" ng-if="ctrl.message">{{ ctrl.message }}</p>
+
+  <found-items items="ctrl.found" on-remove="ctrl.removeItem(index)"></found-items>
+
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <script src="app.js"></script>
 </body>

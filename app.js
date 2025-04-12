@@ -13,21 +13,29 @@
           items: '<',
           onRemove: '&'
         },
-        templateUrl: 'foundItems.html'
+        template: `
+          <ul>
+            <li ng-repeat="item in items track by $index">
+              {{ item.name }}, {{ item.short_name }}, {{ item.description }}
+              <button ng-click="onRemove({ index: $index })">Don't want this one!</button>
+            </li>
+          </ul>
+        `
       };
     }
   
     NarrowItDownController.$inject = ['MenuSearchService'];
     function NarrowItDownController(MenuSearchService) {
       var ctrl = this;
-      ctrl.searchTerm = '';
+      ctrl.searchTerm = "";
       ctrl.found = [];
-      ctrl.message = '';
+      ctrl.message = "";
   
       ctrl.narrow = function () {
-        if (!ctrl.searchTerm) {
-          ctrl.message = "Nothing found";
+        ctrl.message = "";
+        if (!ctrl.searchTerm || ctrl.searchTerm.trim() === "") {
           ctrl.found = [];
+          ctrl.message = "Nothing found";
           return;
         }
   
@@ -44,16 +52,22 @@
   
     MenuSearchService.$inject = ['$http'];
     function MenuSearchService($http) {
-      this.getMatchedMenuItems = function (searchTerm) {
-        return $http.get('https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json')
+      var service = this;
+  
+      service.getMatchedMenuItems = function (searchTerm) {
+        return $http.get("https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json")
           .then(function (response) {
             var allItems = response.data.menu_items;
-            return allItems.filter(item =>
-              item.description.toLowerCase().includes(searchTerm.toLowerCase())
-            );
+            var foundItems = [];
+  
+            for (var i = 0; i < allItems.length; i++) {
+              if (allItems[i].description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
+                foundItems.push(allItems[i]);
+              }
+            }
+            return foundItems;
           });
       };
     }
-  
   })();
   
