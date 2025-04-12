@@ -12,11 +12,18 @@
 <body ng-controller="NarrowItDownController as ctrl">
 
   <input type="text" ng-model="ctrl.searchTerm" placeholder="Search term">
-  <button ng-click="ctrl.narrow()">Narrow It Down For Me!</button>
+  <button ng-click="ctrl.narrowDown()">Narrow It Down For Me!</button>
 
-  <p class="error" ng-if="ctrl.message">{{ ctrl.message }}</p>
+  <!-- Display error or "Nothing found!" message -->
+  <p class="error" ng-if="ctrl.searched && ctrl.found.length === 0">{{ ctrl.message }}</p>
 
-  <found-items items="ctrl.found" on-remove="ctrl.removeItem(index)"></found-items>
+  <!-- Display the list of found items -->
+  <ul>
+    <li ng-repeat="item in ctrl.found">
+      {{ item.name }} ({{ item.short_name }})
+      <button ng-click="ctrl.removeItem($index)">Remove</button>
+    </li>
+  </ul>
 
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <script src="app.js"></script>
